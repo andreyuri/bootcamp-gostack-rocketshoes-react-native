@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import { FlatList } from 'react-native';
 import { IntlProvider, FormattedNumber } from 'react-intl';
 import Icon from 'react-native-vector-icons/MaterialIcons';
@@ -32,6 +33,15 @@ class Main extends Component {
     this.setState({ products: response.data });
   }
 
+  handleAddProduct = (product) => {
+    const { dispatch } = this.props;
+
+    dispatch({
+      type: 'ADD_TO_CART',
+      product,
+    });
+  };
+
   render() {
     const { products } = this.state;
     return (
@@ -41,7 +51,7 @@ class Main extends Component {
             horizontal
             showsHorizontalScrollIndicator={false}
             data={products}
-            keyExtractor={(product) => String(product.id)}
+            keyExtractor={(item) => String(item.id)}
             renderItem={({ item }) => (
               <Product>
                 <Image source={{ uri: item.image }} />
@@ -53,7 +63,7 @@ class Main extends Component {
                     currency="BRL"
                   />
                 </Price>
-                <AddButtom>
+                <AddButtom onPress={() => this.handleAddProduct(item)}>
                   <AddButtomProductAmount>
                     <Icon name="add-shopping-cart" size={20} color="#FFF" />
                     <AddButtomProductAmountText>0</AddButtomProductAmountText>
@@ -69,4 +79,4 @@ class Main extends Component {
   }
 }
 
-export default Main;
+export default connect()(Main);

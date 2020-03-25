@@ -1,10 +1,9 @@
 import styled from 'styled-components/native';
-import { RectButton } from 'react-native-gesture-handler';
 import { darken } from 'polished';
+import colors from '../../styles/colors';
 
 export const Container = styled.View`
-  flex: 1;
-  background: #191920;
+  background: ${colors.dark};
 `;
 
 export const Product = styled.View`
@@ -13,7 +12,6 @@ export const Product = styled.View`
   margin: 15px;
   border-radius: 4px;
   width: 220px;
-  height: 50%;
 `;
 
 export const Image = styled.Image`
@@ -22,7 +20,6 @@ export const Image = styled.Image`
 `;
 
 export const Title = styled.Text.attrs({ numberOfLines: 1 })`
-  color: #333333;
   font-size: 16px;
 `;
 
@@ -31,8 +28,8 @@ export const Price = styled.Text`
   font-size: 20px;
 `;
 
-export const AddButtom = styled(RectButton)`
-  background: #7159c1;
+export const AddButtom = styled.TouchableOpacity`
+  background: ${colors.primary};
   flex-direction: row;
   align-items: center;
   border-radius: 4px;
@@ -50,7 +47,7 @@ export const AddButtomProductAmount = styled.View`
   padding: 10px 20px;
   flex-direction: row;
   align-items: center;
-  background: ${darken(0.03, '#7159c1')};
+  background: ${darken(0.03, colors.primary)};
   border-top-left-radius: 4px;
   border-bottom-left-radius: 4px;
 `;
