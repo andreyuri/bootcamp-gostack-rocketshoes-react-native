@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
 import { FlatList } from 'react-native';
 import { IntlProvider, FormattedNumber } from 'react-intl';
 import Icon from 'react-native-vector-icons/MaterialIcons';
@@ -17,12 +18,9 @@ import {
 } from './styles';
 
 import api from '../../services/api';
+import * as CartActions from '../../store/modules/cart/actions';
 
 class Main extends Component {
-  static navigationOptions = {
-    title: 'Rocketshoes',
-  };
-
   state = {
     products: [],
   };
@@ -34,16 +32,14 @@ class Main extends Component {
   }
 
   handleAddProduct = (product) => {
-    const { dispatch } = this.props;
+    const { addToCart } = this.props;
 
-    dispatch({
-      type: 'ADD_TO_CART',
-      product,
-    });
+    addToCart(product);
   };
 
   render() {
     const { products } = this.state;
+    const { amount } = this.props;
     return (
       <IntlProvider locale="pt-BR">
         <Container>
@@ -66,7 +62,9 @@ class Main extends Component {
                 <AddButtom onPress={() => this.handleAddProduct(item)}>
                   <AddButtomProductAmount>
                     <Icon name="add-shopping-cart" size={20} color="#FFF" />
-                    <AddButtomProductAmountText>0</AddButtomProductAmountText>
+                    <AddButtomProductAmountText>
+                      {amount[item.id] || 0}
+                    </AddButtomProductAmountText>
                   </AddButtomProductAmount>
                   <AddButtomText>ADICIONAR</AddButtomText>
                 </AddButtom>
@@ -79,4 +77,14 @@ class Main extends Component {
   }
 }
 
-export default connect()(Main);
+const mapStateToProps = (state) => ({
+  amount: state.cart.reduce((amount, product) => {
+    amount[product.id] = product.amount;
+    return amount;
+  }, {}),
+});
+
+const mapDispatchToProps = (dispatch) =>
+  bindActionCreators(CartActions, dispatch);
+
+export default connect(mapStateToProps, mapDispatchToProps)(Main);

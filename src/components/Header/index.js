@@ -2,13 +2,22 @@ import React from 'react';
 import { connect } from 'react-redux';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 
-import { Wrapper, Container, BasketContainer, Logo, ItemCount } from './styles';
+import {
+  Wrapper,
+  Container,
+  BasketContainer,
+  LogoContainer,
+  Logo,
+  ItemCount,
+} from './styles';
 
 function Header({ navigation, cartSize }) {
   return (
     <Wrapper>
       <Container>
-        <Logo />
+        <LogoContainer onPress={() => navigation.navigate('Main')}>
+          <Logo />
+        </LogoContainer>
         <BasketContainer onPress={() => navigation.navigate('Cart')}>
           <Icon name="shopping-basket" color="#FFF" size={24} />
           <ItemCount>{cartSize || 0}</ItemCount>

@@ -1,7 +1,11 @@
 import React from 'react';
 import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
 import { IntlProvider, FormattedNumber } from 'react-intl';
+import Icon from 'react-native-vector-icons/MaterialIcons';
 
+import * as CartActions from '../../store/modules/cart/actions';
+import colors from '../../styles/colors';
 import {
   Container,
   Products,
@@ -11,8 +15,10 @@ import {
   ProductDetails,
   ProductDetailsTitle,
   ProductDetailsPrice,
+  ProductDelete,
   ProductSubTotal,
   ProductSubTotalPrice,
+  ProductSubTotalControlButton,
   ProductSubTotalAmount,
   Total,
   TotalTitle,
@@ -21,7 +27,15 @@ import {
   OrderText,
 } from './styles';
 
-function Cart({ cart }) {
+function Cart({ total, cart, removeFromCart, updateAmount }) {
+  function increase({ id, amount }) {
+    updateAmount(id, amount + 1);
+  }
+
+  function decrease({ id, amount }) {
+    updateAmount(id, amount - 1);
+  }
+
   return (
     <IntlProvider locale="pt-BR">
       <Container>
@@ -40,11 +54,36 @@ function Cart({ cart }) {
                     />
                   </ProductDetailsPrice>
                 </ProductDetails>
+                <ProductDelete onPress={() => removeFromCart(product.id)}>
+                  <Icon
+                    name="delete-forever"
+                    size={24}
+                    color={colors.primary}
+                  />
+                </ProductDelete>
               </ProductInfo>
               <ProductSubTotal>
-                <ProductSubTotalAmount>0</ProductSubTotalAmount>
+                <ProductSubTotalControlButton onPress={() => decrease(product)}>
+                  <Icon
+                    name="remove-circle-outline"
+                    size={20}
+                    color={colors.primary}
+                  />
+                </ProductSubTotalControlButton>
+                <ProductSubTotalAmount>{product.amount}</ProductSubTotalAmount>
+                <ProductSubTotalControlButton onPress={() => increase(product)}>
+                  <Icon
+                    name="add-circle-outline"
+                    size={20}
+                    color={colors.primary}
+                  />
+                </ProductSubTotalControlButton>
                 <ProductSubTotalPrice>
-                  <FormattedNumber value={0} style="currency" currency="BRL" />
+                  <FormattedNumber
+                    value={product.subtotal}
+                    style="currency"
+                    currency="BRL"
+                  />
                 </ProductSubTotalPrice>
               </ProductSubTotal>
             </Product>
@@ -54,7 +93,7 @@ function Cart({ cart }) {
           <TotalTitle>TOTAL</TotalTitle>
           <TotalPrice>
             {' '}
-            <FormattedNumber value={0} style="currency" currency="BRL" />
+            <FormattedNumber value={total} style="currency" currency="BRL" />
           </TotalPrice>
           <Order>
             <OrderText>Finalizar pedido</OrderText>
@@ -66,7 +105,16 @@ function Cart({ cart }) {
 }
 
 const mapStateToProps = (state) => ({
-  cart: state.cart,
+  cart: state.cart.map((product) => ({
+    ...product,
+    subtotal: product.amount * product.price,
+  })),
+  total: state.cart.reduce((total, product) => {
+    return total + product.price * product.amount;
+  }, 0),
 });
 
-export default connect(mapStateToProps)(Cart);
+const mapDispatchToProps = (dispatch) =>
+  bindActionCreators(CartActions, dispatch);
+
+export default connect(mapStateToProps, mapDispatchToProps)(Cart);
