@@ -27,13 +27,13 @@ import {
   OrderText,
 } from './styles';
 
-function Cart({ total, cart, removeFromCart, updateAmount }) {
+function Cart({ total, cart, removeFromCart, updateAmountRequest }) {
   function increase({ id, amount }) {
-    updateAmount(id, amount + 1);
+    updateAmountRequest(id, amount + 1);
   }
 
   function decrease({ id, amount }) {
-    updateAmount(id, amount - 1);
+    updateAmountRequest(id, amount - 1);
   }
 
   return (

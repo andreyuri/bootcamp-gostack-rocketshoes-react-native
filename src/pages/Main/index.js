@@ -31,10 +31,10 @@ class Main extends Component {
     this.setState({ products: response.data });
   }
 
-  handleAddProduct = (product) => {
-    const { addToCart } = this.props;
+  handleAddProduct = (id) => {
+    const { addToCartRequest } = this.props;
 
-    addToCart(product);
+    addToCartRequest(id);
   };
 
   render() {
@@ -59,7 +59,7 @@ class Main extends Component {
                     currency="BRL"
                   />
                 </Price>
-                <AddButtom onPress={() => this.handleAddProduct(item)}>
+                <AddButtom onPress={() => this.handleAddProduct(item.id)}>
                   <AddButtomProductAmount>
                     <Icon name="add-shopping-cart" size={20} color="#FFF" />
                     <AddButtomProductAmountText>
