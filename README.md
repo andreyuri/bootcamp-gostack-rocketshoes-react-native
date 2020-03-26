@@ -13,6 +13,9 @@ Cart<br />
 
 ## Como instalar
 
+Baixe as dependências do projeto:
+### `yarn`
+
 Esse projeto utiliza o json-server, instale globalmente:
 ### `npm -g install json-server`
 
